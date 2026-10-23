@@ -1,0 +1,13 @@
+# robots.txt for Bhagirath Enterprise
+
+User-agent: *
+Disallow: /admin/
+Disallow: /config/
+Disallow: /includes/
+Disallow: /newsletter-process.php
+Disallow: /inquiry-process.php
+
+Allow: /
+
+# Sitemap link
+Sitemap: https://royalblue-gazelle-538620.hostingersite.com/sitemap.xml

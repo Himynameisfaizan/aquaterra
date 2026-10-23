@@ -1,0 +1,12 @@
+RewriteEngine On
+
+# Friendly URLs aur Sitemap routing ke liye
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
+# --- SEO Fix: Redirect fake .php slugs to actual blog details page ---
+# Check if the requested .php file DOES NOT exist on the server
+RewriteCond %{REQUEST_FILENAME} !-f
+# Check if the request is NOT a directory
+RewriteCond %{REQUEST_FILENAME} !-d
+# Redirect fake .php URLs to the actual dynamic blog URL
+RewriteRule ^([a-zA-Z0-9_-]+)\.php$ /blog-details.php?slug=$1 [R=301,L,QSA]
