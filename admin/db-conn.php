@@ -14,7 +14,7 @@ if ($local) {
     $username = 'root';
     $password = '';
     $dbName = 'aquaterra';
-    $site = "http://localhost/office_php_project/aquaterra/";
+    $site = "http://localhost/projects/aquaterra/";
 } else {
     $host = 'localhost';
     $username = 'u799879276_bhagirath_db';

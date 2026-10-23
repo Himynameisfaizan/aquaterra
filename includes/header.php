@@ -39,7 +39,7 @@ function tableExists($conn, $tableName) {
 }
 
 // 1. Backend Settings / Contact Table se Dynamic Logo aur Details Fetch Karna
-$settings_tables = ['site_settings', 'settings', 'contact_info', 'company_info', 'general_settings'];
+$settings_tables = ['contacts', 'site_settings', 'settings', 'contact_info', 'company_info', 'general_settings'];
 foreach ($settings_tables as $tbl) {
     if (tableExists($conn, $tbl)) {
         $res = $conn->query("SELECT * FROM `$tbl` LIMIT 1");
@@ -72,6 +72,12 @@ foreach ($settings_tables as $tbl) {
     }
 }
 
+// Logo `logos` table se (location = header, active)
+if (empty($site_Info['logo_path']) && tableExists($conn, 'logos')) {
+    $lr = $conn->query("SELECT logo_path FROM logos WHERE location='header' AND is_active=1 ORDER BY id DESC LIMIT 1");
+    if ($lr && $lr->num_rows) $site_Info['logo_path'] = $lr->fetch_assoc()['logo_path'];
+}
+
 // Verify ki Logo File Server par Asal Mein Exist Karti Hai Ya Nahi
 $has_valid_logo = false;
 $final_logo_url = '';
@@ -97,11 +103,11 @@ $nav_categories = [];
 $cat_tables = ['categories', 'product_categories', 'category'];
 foreach ($cat_tables as $ctbl) {
     if (tableExists($conn, $ctbl)) {
-        $cat_res = $conn->query("SELECT * FROM `$ctbl` ORDER BY id ASC LIMIT 8");
+        $cat_res = $conn->query("SELECT * FROM `$ctbl` WHERE status=1 ORDER BY id ASC LIMIT 8");
         if ($cat_res && $cat_res->num_rows > 0) {
             while ($c = $cat_res->fetch_assoc()) {
-                $cat_name = $c['name'] ?? $c['category_name'] ?? $c['title'] ?? '';
-                $cat_slug = $c['slug'] ?? $c['category_slug'] ?? $c['id'] ?? '';
+                $cat_name = $c['categories'] ?? $c['name'] ?? $c['category_name'] ?? $c['title'] ?? '';
+                $cat_slug = $c['slug_url'] ?? $c['slug'] ?? $c['category_slug'] ?? $c['id'] ?? '';
                 if (!empty($cat_name)) {
                     $nav_categories[] = [
                         'name' => $cat_name,
@@ -142,9 +148,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/include.css">
+    <link rel="stylesheet" href="assets/css/home.css?v=<?php echo @filemtime(__DIR__ . '/../assets/css/home.css'); ?>">
+    <script>
+    document.documentElement.classList.add('js')
+    </script>
 </head>
 
 <body>
+    <div id="aqProgress"></div>
 
     <!-- ==================== MAIN HEADER START ==================== -->
     <header id="aqMainHeader"
