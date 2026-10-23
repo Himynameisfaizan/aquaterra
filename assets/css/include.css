@@ -1,0 +1,386 @@
+:root {
+  /* 60% Neutral / Background Colors */
+  --clr-bg-cream: #f6f5f0;
+  /* Soft Organic Cream Background */
+  --clr-bg-white: #ffffff;
+  /* Pure Card White */
+  --clr-text-dark: #18241d;
+  /* Deep Charcoal-Green Text */
+  --clr-text-muted: #5a655e;
+  /* Muted Body Text */
+  --clr-border: #e4e2da;
+  /* Subtle Warm Border */
+
+  /* 30% Brand Primary / Secondary Colors (Deep Forest Green) */
+  --clr-primary-dark: #0f291e;
+  /* Deepest Forest Green (Header/Footer/Hero Strip) */
+  --clr-primary: #163829;
+  /* Rich Agricultural Green */
+  --clr-primary-light: #204c39;
+  /* Hover / Surface Green */
+  --clr-primary-rgb: 15, 41, 30;
+  /* RGB for Glassmorphism Transparency */
+
+  /* 10% Accent Colors (Harvest Gold / Warm Amber) */
+  --clr-accent: #e5a922;
+  /* Golden Harvest Button & Highlights */
+  --clr-accent-hover: #cf9415;
+  /* Deeper Gold on Hover */
+  --clr-accent-soft: rgba(229, 169, 34, 0.15);
+
+  /* Typography */
+  --font-heading: "Cormorant Garamond", Georgia, serif;
+  --font-body:
+    "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Transitions & Shadows */
+  --transition-smooth: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow-soft: 0 12px 32px -8px rgba(15, 41, 30, 0.08);
+  --shadow-header: 0 10px 30px rgba(0, 0, 0, 0.18);
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--clr-bg-cream);
+  color: var(--clr-text-dark);
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+.serif-heading {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* ==========================================================================
+           HEADER & NAVIGATION STYLING (MATCHING NAHAR TRADERS REFERENCE)
+           ========================================================================== */
+.aq-header-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1040;
+  transition: var(--transition-smooth);
+  background: linear-gradient(
+    180deg,
+    rgba(var(--clr-primary-rgb), 0.82) 0%,
+    rgba(var(--clr-primary-rgb), 0.35) 75%,
+    transparent 100%
+  );
+  padding: 18px 0;
+}
+
+/* Jab user scroll karega ya inner pages par hoga */
+.aq-header-wrapper.scrolled,
+.aq-header-wrapper.inner-page-header {
+  background: rgba(var(--clr-primary-rgb), 0.96);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 12px 0;
+  box-shadow: var(--shadow-header);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Brand Logo Styling (Image + Stylish Text Fallback) */
+.aq-brand {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: var(--transition-smooth);
+}
+
+.aq-brand:hover {
+  transform: translateY(-1px);
+}
+
+.aq-brand-img {
+  max-height: 52px;
+  width: auto;
+  object-fit: contain;
+  transition: var(--transition-smooth);
+}
+
+.aq-header-wrapper.scrolled .aq-brand-img {
+  max-height: 45px;
+}
+
+/* Custom Typographic Logo (Jab Backend se Logo Na Ho) */
+.aq-text-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+  user-select: none;
+}
+
+.aq-text-logo-main {
+  font-family: var(--font-heading);
+  font-size: 2.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+/* Chhota sa Organic Leaf Accent Icon */
+.aq-text-logo-leaf {
+  color: var(--clr-accent);
+  font-size: 1.15rem;
+  margin-top: -10px;
+  display: inline-block;
+  transform: rotate(15deg);
+}
+
+.aq-text-logo-sub {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  justify-content: center;
+  margin-top: 3px;
+}
+
+.aq-text-logo-sub::before,
+.aq-text-logo-sub::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--clr-accent);
+  opacity: 0.85;
+  min-width: 14px;
+}
+
+.aq-text-logo-sub span {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  color: var(--clr-accent);
+  text-transform: uppercase;
+  padding-left: 0.26em;
+  /* Optical balance for letter-spacing */
+}
+
+/* Navigation Links */
+.aq-nav-list {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.aq-nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 0.93rem;
+  font-weight: 500;
+  padding: 8px 15px !important;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: var(--transition-smooth);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.aq-nav-link:hover,
+.aq-nav-link.active {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.aq-nav-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 2px;
+  background-color: var(--clr-accent);
+  border-radius: 2px;
+}
+
+/* Dropdown Menu Styling */
+.aq-dropdown {
+  position: relative;
+}
+
+.aq-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 230px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 10px;
+  box-shadow: 0 18px 40px rgba(15, 41, 30, 0.16);
+  border: 1px solid var(--clr-border);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: var(--transition-smooth);
+  z-index: 1050;
+  list-style: none;
+  margin-top: 8px;
+}
+
+.aq-dropdown:hover .aq-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.aq-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  color: var(--clr-text-dark);
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.aq-dropdown-item:hover {
+  background-color: var(--clr-bg-cream);
+  color: var(--clr-primary);
+  padding-left: 18px;
+}
+
+.aq-dropdown-item i {
+  font-size: 0.75rem;
+  color: var(--clr-accent);
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+.aq-dropdown-item:hover i {
+  opacity: 1;
+}
+
+/* CTA Button ("Get a quote" Pill Button) */
+.btn-aq-quote {
+  background-color: var(--clr-accent);
+  color: #14221a !important;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 10px 24px;
+  border-radius: 50px;
+  border: none;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition-smooth);
+  box-shadow: 0 4px 15px rgba(229, 169, 34, 0.3);
+}
+
+.btn-aq-quote:hover {
+  background-color: var(--clr-accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(229, 169, 34, 0.45);
+}
+
+/* Mobile Hamburger Button */
+.aq-mobile-toggle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.aq-mobile-toggle:hover {
+  background: var(--clr-accent);
+  color: var(--clr-primary-dark);
+  border-color: var(--clr-accent);
+}
+
+/* Mobile Offcanvas Styling */
+.aq-offcanvas {
+  background-color: var(--clr-primary-dark);
+  color: #ffffff;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.aq-offcanvas .offcanvas-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 20px 24px;
+}
+
+.aq-offcanvas .btn-close-white {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.aq-mobile-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.aq-mobile-nav li {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.aq-mobile-nav a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 4px;
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-size: 1.02rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.aq-mobile-nav a:hover,
+.aq-mobile-nav a.active {
+  color: var(--clr-accent);
+  padding-left: 10px;
+}
+
+.aq-gst-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 991.98px) {
+  .aq-text-logo-main {
+    font-size: 1.85rem;
+  }
+
+  .aq-header-wrapper {
+    padding: 14px 0;
+  }
+}

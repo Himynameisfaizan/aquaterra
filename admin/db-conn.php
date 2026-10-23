@@ -13,8 +13,8 @@ if ($local) {
     $host = 'localhost';
     $username = 'root';
     $password = '';
-    $dbName = 'bhagirath';
-    $site = "http://localhost/office_php_project/bhagirath/";
+    $dbName = 'aquaterra';
+    $site = "http://localhost/office_php_project/aquaterra/";
 } else {
     $host = 'localhost';
     $username = 'u799879276_bhagirath_db';
