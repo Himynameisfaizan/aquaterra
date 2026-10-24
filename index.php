@@ -3,31 +3,7 @@ include('config/connect.php');
 if (session_status() === PHP_SESSION_NONE) session_start();
 $_SESSION['csrf'] ??= bin2hex(random_bytes(16));
 
-const PH = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><rect width="100%" height="100%" fill="%23dfe8da"/></svg>';
-// Har content type ka admin upload folder (aapke bataye hue paths)
-const IMG_DIRS = [
-    'products'     => ['admin/assets/img/uploads/'],
-    'categories'   => ['admin/uploads/category/'],
-    'blogs'        => ['admin/assets/img/uploads/blogs/'],
-    'services'     => ['admin/assets/img/uploads/'],
-    'gallery'      => ['admin/assets/img/uploads/gallery/', 'admin/uploads/gallery/', 'admin/assets/img/uploads/'],
-    'certificates' => ['admin/assets/img/uploads/certificates/', 'admin/uploads/certificates/', 'admin/assets/img/uploads/'],
-];
-function e($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
-function q($sql) { global $conn; try { $r = $conn->query($sql); return $r ? $r->fetch_all(MYSQLI_ASSOC) : []; } catch (Throwable $t) { return []; } }
-function txt($h, $n = 110) { $t = trim(preg_replace('/\s+/', ' ', strip_tags(html_entity_decode((string)$h)))); return mb_strlen($t) > $n ? mb_substr($t, 0, $n - 1) . '…' : $t; }
-function img($f, $type) {
-    $f = ltrim(trim(explode(',', (string)$f)[0]), '/');
-    if ($f === '') return PH;
-    if (preg_match('#^https?://#', $f)) return $f;
-    foreach (array_merge(IMG_DIRS[$type] ?? [], ['', 'admin/', "uploads/$type/", 'admin/uploads/', 'admin/assets/img/uploads/']) as $d)
-        if (is_file(__DIR__ . '/' . $d . $f)) return implode('/', array_map('rawurlencode', explode('/', $d . $f)));
-    return PH;
-}
-function sec_head($eyebrow, $title) {
-    echo '<div class="aq-sec-head text-center mx-auto mb-5 reveal" style="max-width:680px"><span class="aq-eyebrow text-uppercase fw-bold small d-block mb-2">' . e($eyebrow) . '</span><h2 class="serif-heading display-6 fw-bold">' . e($title) . '</h2></div>';
-}
-function d($i) { return 'style="--d:' . round($i * 0.09, 2) . 's"'; }
+include 'includes/functions.php';
 
 // ---------- INQUIRY FORM HANDLER ----------
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['form'] ?? '') === 'inquiry') {
@@ -189,8 +165,8 @@ $faqs = [['What is the minimum order quantity (MOQ)?', 'MOQ depends on the produ
         <?php sec_head('Product range', 'Shop by Category'); ?>
         <div class="row g-4 justify-content-center">
             <?php foreach ($cats as $i => $c): ?>
-            <div class="col-md-6 col-lg-4 reveal" <?= d($i) ?>><a
-                    href="products.php?category=<?= urlencode($c['slug_url']) ?>" class="aq-cat-card">
+            <div class="col-md-6 col-lg-4 reveal" <?= d($i) ?>><a href="category/<?= rawurlencode($c['slug_url']) ?>"
+                    class="aq-cat-card">
                     <img src="<?= e(img($c['image'], 'categories')) ?>" alt="<?= e($c['categories']) ?>" loading="lazy">
                     <div class="cap">
                         <h3 class="h4 mb-1 text-white"><?= e($c['categories']) ?></h3><small><?= (int)$c['cnt'] ?>

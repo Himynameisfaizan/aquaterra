@@ -1,10 +1,11 @@
 <?php
+$base = $base ?? '';
 // Database Connection Check (Agar pehle se db connection include nahi hai to yahan connect karega)
 if (!isset($conn) && !isset($pdo)) {
     $db_host = 'localhost';
     $db_user = 'root';
     $db_pass = '';
-    $db_name = 'bhagirath'; // Aapke SQL dump ka database name
+    $db_name = 'aquaterra'; // Aapke SQL dump ka database name
 
     $conn = @new mysqli($db_host, $db_user, $db_pass, $db_name);
     if ($conn->connect_error) {
@@ -86,13 +87,15 @@ if (!empty($site_Info['logo_path'])) {
         $site_Info['logo_path'],
         'uploads/' . ltrim($site_Info['logo_path'], '/'),
         'uploads/logo/' . ltrim($site_Info['logo_path'], '/'),
+        'admin/assets/img/uploads/' . ltrim($site_Info['logo_path'], '/'),
+        'admin/uploads/logo/' . ltrim($site_Info['logo_path'], '/'),
         'admin/uploads/' . ltrim($site_Info['logo_path'], '/'),
         'assets/images/' . ltrim($site_Info['logo_path'], '/')
     ];
     foreach ($possible_paths as $p) {
-        if (file_exists(__DIR__ . '/' . $p) && is_file(__DIR__ . '/' . $p)) {
+        if (file_exists(dirname(__DIR__) . '/' . $p) && is_file(dirname(__DIR__) . '/' . $p)) {
             $has_valid_logo = true;
-            $final_logo_url = $p;
+            $final_logo_url = $base . implode('/', array_map('rawurlencode', explode('/', $p)));
             break;
         }
     }
@@ -146,9 +149,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
         rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/include.css">
-    <link rel="stylesheet" href="assets/css/home.css?v=<?php echo @filemtime(__DIR__ . '/../assets/css/home.css'); ?>">
+    <link rel="stylesheet" href="<?php echo $base; ?>assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo $base; ?>assets/css/include.css">
+    <link rel="stylesheet"
+        href="<?php echo $base; ?>assets/css/home.css?v=<?php echo @filemtime(__DIR__ . '/../assets/css/home.css'); ?>">
     <script>
     document.documentElement.classList.add('js')
     </script>
@@ -164,7 +168,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <div class="d-flex align-items-center justify-content-between">
 
                 <!-- 1. Brand Logo (Dynamic Image OR Stylized Typographic Fallback) -->
-                <a href="index.php" class="aq-brand"
+                <a href="<?php echo $base; ?>index.php" class="aq-brand"
                     aria-label="<?php echo htmlspecialchars($site_Info['company_name']); ?>">
                     <?php if ($has_valid_logo): ?>
                     <!-- Jab Backend se Logo Upload Hoga to Ye Image Dikhegi -->
@@ -189,27 +193,27 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <nav aria-label="Main Navigation">
                         <ul class="aq-nav-list">
                             <li>
-                                <a href="index.php"
+                                <a href="<?php echo $base; ?>index.php"
                                     class="aq-nav-link <?php echo ($current_page == 'index.php' || $current_page == '') ? 'active' : ''; ?>">Home</a>
                             </li>
                             <li>
-                                <a href="about.php"
+                                <a href="<?php echo $base; ?>about.php"
                                     class="aq-nav-link <?php echo ($current_page == 'about.php') ? 'active' : ''; ?>">About</a>
                             </li>
 
                             <!-- Products Link (With Dynamic Category Dropdown if Categories Exist) -->
                             <?php if (!empty($nav_categories)): ?>
                             <li class="aq-dropdown">
-                                <a href="products.php"
-                                    class="aq-nav-link <?php echo ($current_page == 'products.php' || $current_page == 'product-details.php') ? 'active' : ''; ?>">
+                                <a href="<?php echo $base; ?>products.php"
+                                    class="aq-nav-link <?php echo (in_array($current_page, ['products.php','category.php']) || $current_page == 'product-details.php') ? 'active' : ''; ?>">
                                     Products <i class="bi bi-chevron-down" style="font-size: 0.72rem;"></i>
                                 </a>
                                 <ul class="aq-dropdown-menu">
-                                    <?php foreach ($nav_categories as $cat): ?>
+                                    <?php foreach ($nav_categories as $navCat): ?>
                                     <li>
-                                        <a href="products.php?category=<?php echo urlencode($cat['slug']); ?>"
+                                        <a href="<?php echo $base; ?>category/<?php echo rawurlencode($navCat['slug']); ?>"
                                             class="aq-dropdown-item">
-                                            <span><?php echo htmlspecialchars($cat['name']); ?></span>
+                                            <span><?php echo htmlspecialchars($navCat['name']); ?></span>
                                             <i class="bi bi-arrow-right"></i>
                                         </a>
                                     </li>
@@ -218,7 +222,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                                         <hr class="dropdown-divider my-1">
                                     </li>
                                     <li>
-                                        <a href="products.php" class="aq-dropdown-item fw-semibold"
+                                        <a href="<?php echo $base; ?>products.php" class="aq-dropdown-item fw-semibold"
                                             style="color: var(--clr-primary);">
                                             <span>View All Products</span>
                                             <i class="bi bi-grid-fill" style="opacity: 1;"></i>
@@ -228,35 +232,36 @@ $current_page = basename($_SERVER['PHP_SELF']);
                             </li>
                             <?php else: ?>
                             <li>
-                                <a href="products.php"
-                                    class="aq-nav-link <?php echo ($current_page == 'products.php' || $current_page == 'product-details.php') ? 'active' : ''; ?>">Products</a>
+                                <a href="<?php echo $base; ?>products.php"
+                                    class="aq-nav-link <?php echo (in_array($current_page, ['products.php','category.php']) || $current_page == 'product-details.php') ? 'active' : ''; ?>">Products</a>
                             </li>
                             <?php endif; ?>
 
                             <li>
-                                <a href="index.php#services"
+                                <a href="<?php echo $base; ?>index.php#services"
                                     class="aq-nav-link <?php echo ($current_page == 'services.php') ? 'active' : ''; ?>">Services</a>
                             </li>
                             <li>
-                                <a href="gallery.php"
+                                <a href="<?php echo $base; ?>gallery.php"
                                     class="aq-nav-link <?php echo ($current_page == 'gallery.php') ? 'active' : ''; ?>">Gallery</a>
                             </li>
                             <li>
-                                <a href="blog.php"
+                                <a href="<?php echo $base; ?>blog.php"
                                     class="aq-nav-link <?php echo ($current_page == 'blog.php' || $current_page == 'blog-details.php') ? 'active' : ''; ?>">Blog</a>
                             </li>
                         </ul>
                     </nav>
 
                     <!-- Get a Quote CTA Button (Reference Design Match) -->
-                    <a href="#order-enquiry" class="btn-aq-quote ms-2">
+                    <a href="<?php echo $base; ?>index.php#order-enquiry" class="btn-aq-quote ms-2">
                         Get a quote
                     </a>
                 </div>
 
                 <!-- 3. Mobile Hamburger Menu Toggle -->
                 <div class="d-flex align-items-center gap-2 d-lg-none">
-                    <a href="#order-enquiry" class="btn-aq-quote py-2 px-3" style="font-size: 0.82rem;">
+                    <a href="<?php echo $base; ?>index.php#order-enquiry" class="btn-aq-quote py-2 px-3"
+                        style="font-size: 0.82rem;">
                         Get a quote
                     </a>
                     <button class="aq-mobile-toggle" type="button" data-bs-toggle="offcanvas"
@@ -297,46 +302,51 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <div>
                 <ul class="aq-mobile-nav">
                     <li>
-                        <a href="index.php"
+                        <a href="<?php echo $base; ?>index.php"
                             class="<?php echo ($current_page == 'index.php' || $current_page == '') ? 'active' : ''; ?>">
                             <span>Home</span> <i class="bi bi-chevron-right small"></i>
                         </a>
                     </li>
                     <li>
-                        <a href="about.php" class="<?php echo ($current_page == 'about.php') ? 'active' : ''; ?>">
+                        <a href="<?php echo $base; ?>about.php"
+                            class="<?php echo ($current_page == 'about.php') ? 'active' : ''; ?>">
                             <span>About Us</span> <i class="bi bi-chevron-right small"></i>
                         </a>
                     </li>
                     <li>
-                        <a href="products.php" class="<?php echo ($current_page == 'products.php') ? 'active' : ''; ?>">
+                        <a href="<?php echo $base; ?>products.php"
+                            class="<?php echo (in_array($current_page, ['products.php','category.php'])) ? 'active' : ''; ?>">
                             <span>Our Products</span> <i class="bi bi-chevron-right small"></i>
                         </a>
                     </li>
                     <li>
-                        <a href="index.php#services">
+                        <a href="<?php echo $base; ?>index.php#services">
                             <span>Services</span> <i class="bi bi-chevron-right small"></i>
                         </a>
                     </li>
                     <li>
-                        <a href="gallery.php" class="<?php echo ($current_page == 'gallery.php') ? 'active' : ''; ?>">
+                        <a href="<?php echo $base; ?>gallery.php"
+                            class="<?php echo ($current_page == 'gallery.php') ? 'active' : ''; ?>">
                             <span>Gallery</span> <i class="bi bi-chevron-right small"></i>
                         </a>
                     </li>
                     <li>
-                        <a href="blog.php" class="<?php echo ($current_page == 'blog.php') ? 'active' : ''; ?>">
+                        <a href="<?php echo $base; ?>blog.php"
+                            class="<?php echo ($current_page == 'blog.php') ? 'active' : ''; ?>">
                             <span>Blog & Insights</span> <i class="bi bi-chevron-right small"></i>
                         </a>
                     </li>
                     <li>
-                        <a href="contact.php" class="<?php echo ($current_page == 'contact.php') ? 'active' : ''; ?>">
+                        <a href="<?php echo $base; ?>contact.php"
+                            class="<?php echo ($current_page == 'contact.php') ? 'active' : ''; ?>">
                             <span>Contact Us</span> <i class="bi bi-chevron-right small"></i>
                         </a>
                     </li>
                 </ul>
 
                 <div class="mt-4">
-                    <a href="#order-enquiry" class="btn-aq-quote w-100 justify-content-center py-3"
-                        data-bs-dismiss="offcanvas">
+                    <a href="<?php echo $base; ?>index.php#order-enquiry"
+                        class="btn-aq-quote w-100 justify-content-center py-3" data-bs-dismiss="offcanvas">
                         <i class="bi bi-send-fill"></i> Request Bulk Quote
                     </a>
                 </div>

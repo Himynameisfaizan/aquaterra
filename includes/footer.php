@@ -1,4 +1,5 @@
 <?php
+$base = $base ?? '';
 $ft = [];
 if (isset($conn)) { try { $r = $conn->query("SELECT * FROM contacts LIMIT 1"); $ft = $r ? ($r->fetch_assoc() ?: []) : []; } catch (Throwable $t) {} }
 $wa = preg_replace('/\D/', '', $ft['wp_number'] ?? ''); if (strlen($wa) === 10) $wa = '91' . $wa;
@@ -20,19 +21,19 @@ $wa = preg_replace('/\D/', '', $ft['wp_number'] ?? ''); if (strlen($wa) === 10) 
             <div class="col-6 col-lg-2">
                 <h6 class="text-white mb-3">Quick links</h6>
                 <ul class="list-unstyled small d-grid gap-2">
-                    <li><a href="index.php">Home</a></li>
-                    <li><a href="about.php">About</a></li>
-                    <li><a href="products.php">Products</a></li>
-                    <li><a href="gallery.php">Gallery</a></li>
-                    <li><a href="blog.php">Blog</a></li>
-                    <li><a href="#order-enquiry">Get a quote</a></li>
+                    <li><a href="<?= $base ?>index.php">Home</a></li>
+                    <li><a href="<?= $base ?>about.php">About</a></li>
+                    <li><a href="<?= $base ?>products.php">Products</a></li>
+                    <li><a href="<?= $base ?>gallery.php">Gallery</a></li>
+                    <li><a href="<?= $base ?>blog.php">Blog</a></li>
+                    <li><a href="<?= $base ?>index.php#order-enquiry">Get a quote</a></li>
                 </ul>
             </div>
             <div class="col-6 col-lg-3">
                 <h6 class="text-white mb-3">Categories</h6>
                 <ul class="list-unstyled small d-grid gap-2">
                     <?php foreach ($nav_categories ?? [] as $c): ?><li><a
-                            href="products.php?category=<?= urlencode($c['slug']) ?>"><?= htmlspecialchars($c['name']) ?></a>
+                            href="<?= $base ?>category/<?= rawurlencode($c['slug']) ?>"><?= htmlspecialchars($c['name']) ?></a>
                     </li><?php endforeach; ?></ul>
             </div>
             <div class="col-lg-3 small">
@@ -69,7 +70,7 @@ $wa = preg_replace('/\D/', '', $ft['wp_number'] ?? ''); if (strlen($wa) === 10) 
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="assets/js/main.js?v=<?= @filemtime(__DIR__ . '/../assets/js/main.js') ?>"></script>
+<script src="<?= $base ?>assets/js/main.js?v=<?= @filemtime(__DIR__ . '/../assets/js/main.js') ?>"></script>
 </body>
 
 </html>
